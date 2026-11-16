@@ -51,7 +51,9 @@ def is_current(chunk: Chunk) -> bool:
 
     Look at the metadata of the documents in data/ and decide which field tells you that.
     """
-    raise NotImplementedError("step 4: write is_current")
+    # The front matter marks a replaced document with `status: superseded` (warranty-2023).
+    # A missing status counts as current, so a document is dropped only when it is explicitly marked.
+    return chunk.meta.get("status", "current") != "superseded"
 
 
 def search(index: Index, query: str, mode: str = "vector", top_k: int = 5,
