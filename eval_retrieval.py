@@ -1,4 +1,4 @@
-"""Measures retrieval on the golden questions. Free: no Claude call.
+"""Measures retrieval on the golden questions. Free: no language-model call.
 Prints, for each question, whether the answer is in the top-k chunks and in which place.
 
   python eval_retrieval.py                                     # the baseline (v0)
