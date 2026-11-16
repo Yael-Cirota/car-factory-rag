@@ -39,7 +39,11 @@ def rrf(rankings: list[list[int]], k: int = 60) -> list[int]:
     A chunk gets 1 / (k + rank) from every list it appears in (rank starts at 1),
     and the scores are summed. Return all chunk indexes, sorted by score, best first.
     """
-    raise NotImplementedError("step 3: write rrf")
+    scores: dict[int, float] = {}
+    for ranking in rankings:
+        for rank, idx in enumerate(ranking, start=1):
+            scores[idx] = scores.get(idx, 0.0) + 1 / (k + rank)
+    return sorted(scores, key=lambda i: scores[i], reverse=True)
 
 
 def is_current(chunk: Chunk) -> bool:
