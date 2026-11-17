@@ -2,6 +2,7 @@ numpy
 rank-bm25
 pydantic
 openai
+anthropic
 sentence-transformers
 # optional, only with EMBED_BACKEND=voyage:
 # voyageai

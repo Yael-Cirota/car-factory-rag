@@ -8,7 +8,7 @@
 - `golden.json` — 15 שאלות בדיקה, ולכל שאלה הטקסט שחייב להופיע בקטע הנכון.
 - `rag/` — הצינור: `loader.py`, `chunking.py`, `embed.py`, `search.py`, `answer.py`.
 - `eval_retrieval.py` — מדידת האחזור. חינם, בלי קריאה למודל שפה.
-- `eval_answers.py` — מדידת התשובות דרך OpenAI. עולה בערך סנט אחד עם gpt-4o-mini (אפשר להחליף מודל עם `LLM_MODEL`).
+- `eval_answers.py` — מדידת התשובות דרך מודל שפה (OpenAI או Anthropic, לפי המפתח שמוגדר). עולה פחות מסנט אחד.
 - `.cache/` — וקטורים שכבר חושבו מראש, כדי שההרצה הראשונה תהיה מהירה.
 
 ## התקנה
@@ -42,4 +42,19 @@ pip install voyageai
 
 ## מפתחות
 
-`OPENAI_API_KEY` ו־`VOYAGE_API_KEY` מוגדרים רק כמשתני סביבה בטרמינל. לעולם לא בקוד ולא ב־git.
+מגדירים אחד מהשניים כמשתנה סביבה בטרמינל, או בקובץ `.env` ליד הסקריפטים (הקובץ נמצא ב־`.gitignore`):
+
+- `OPENAI_API_KEY` — ברירת המחדל היא `gpt-4o-mini`
+- `ANTHROPIC_API_KEY` — ברירת המחדל היא `claude-haiku-5-5`
+
+אם שניהם מוגדרים, `LLM_PROVIDER=openai` או `LLM_PROVIDER=anthropic` בוחר ביניהם, ו־`LLM_MODEL` מחליף את המודל.
+`VOYAGE_API_KEY` נדרש רק עם `EMBED_BACKEND=voyage`. מפתחות לעולם לא נכנסים לקוד ולא ל־git.
+
+## הרצות
+
+```
+python eval_answers.py --chunker headings --mode hybrid --current-only                      # שלב 6
+python eval_answers.py --chunker headings --mode hybrid --current-only --defend --strict-quotes   # בונוס 1
+python eval_answers.py --chunker headings --mode hybrid --current-only --defend --strict-quotes --decompose --only 12   # בונוס 2
+python eval_retrieval.py --k 5                                                              # בונוס 3
+```

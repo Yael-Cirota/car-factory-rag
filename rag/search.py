@@ -67,3 +67,20 @@ def search(index: Index, query: str, mode: str = "vector", top_k: int = 5,
     if current_only:
         ranked = [i for i in ranked if is_current(index.chunks[i])]
     return [index.chunks[i] for i in ranked[:top_k]]
+
+
+def search_decomposed(index: Index, queries: list[str], mode: str = "vector", k_per_query: int = 3,
+                      current_only: bool = False) -> list[Chunk]:
+    """Bonus 2: one search per sub-query, merged in turns (1st of each, then 2nd of each...), without repeats.
+
+    Taking turns guarantees every sub-query gets its own places. A plain RRF over the lists would let
+    one model's chunks (which also match the other sub-query a little) push the other model's chunk out.
+    """
+    results = [search(index, q, mode, k_per_query, current_only) for q in queries]
+    merged, seen = [], set()
+    for rank in range(k_per_query):
+        for found in results:
+            if rank < len(found) and found[rank].id not in seen:
+                seen.add(found[rank].id)
+                merged.append(found[rank])
+    return merged

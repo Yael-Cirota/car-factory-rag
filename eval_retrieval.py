@@ -7,6 +7,7 @@ Prints, for each question, whether the answer is in the top-k chunks and in whic
   python eval_retrieval.py --out results/v0.json               # also save the results
 """
 import argparse
+import sys
 import json
 from collections import defaultdict
 from pathlib import Path
@@ -48,6 +49,7 @@ def build_index(chunker: str) -> Index:
 
 
 def main():
+    sys.stdout.reconfigure(encoding="utf-8")  # the ✓/✗ marks crash the default Windows console encoding
     ap = argparse.ArgumentParser()
     ap.add_argument("--chunker", choices=CHUNKERS, default="fixed")
     ap.add_argument("--mode", choices=["vector", "hybrid"], default="vector")
